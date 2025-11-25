@@ -2,7 +2,6 @@
   position: relative;
   background-color: var(white);
   padding: 120px 40px 80px;
-  overflow: hidden;
 }
 
 .hero-background {
@@ -15,7 +14,11 @@
   background-image: url('/shape.svg');
   background-size: cover;
   background-position: center;
+<<<<<<< Updated upstream
   filter: blur(40px); /* <-- добавляешь тут */
+=======
+  background-repeat: no-repeat;
+>>>>>>> Stashed changes
 }
 
 

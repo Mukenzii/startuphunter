@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './Navbar.css';
+import logo from './logo.svg';
 
 const Navbar = ({ language, onLanguageChange, categories }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -37,10 +38,7 @@ const Navbar = ({ language, onLanguageChange, categories }) => {
       <div className="navbar-container">
         {/* Logo - placeholder for SVG */}
         <div className="navbar-logo">
-          {/* Add your SVG logo here */}
-          <div className="logo-placeholder">
-            <span>Muammo Ixtier Logo</span>
-          </div>
+          <img src={logo} alt="Muammo Ixtier" />
         </div>
 
         {/* Center section with categories and about */}
