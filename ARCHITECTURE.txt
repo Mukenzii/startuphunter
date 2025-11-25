@@ -1,0 +1,311 @@
+╔══════════════════════════════════════════════════════════════════════════╗
+║                    MUAMMO IXTIER - ARCHITECTURE                          ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                          USER INTERFACE FLOW                             │
+└─────────────────────────────────────────────────────────────────────────┘
+
+    [Browser]
+        │
+        ├──→ index.html
+        │       │
+        │       └──→ main.jsx (React Router)
+        │               │
+        │               ├──→ Route: "/"
+        │               │       │
+        │               │       └──→ App.jsx
+        │               │               │
+        │               │               ├──→ Navbar
+        │               │               ├──→ Hero
+        │               │               ├──→ Categories
+        │               │               ├──→ SectionsGrid
+        │               │               │       └──→ SectionCard (×N)
+        │               │               └──→ Footer
+        │               │
+        │               └──→ Route: "/section/:id"
+        │                       │
+        │                       └──→ SectionDetail.jsx
+        │                               ├──→ Navbar
+        │                               └──→ Section Content
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         COMPONENT HIERARCHY                              │
+└─────────────────────────────────────────────────────────────────────────┘
+
+main.jsx
+ │
+ ├─ App.jsx (Home Page)
+ │   ├─ Navbar.jsx
+ │   │   ├─ Logo
+ │   │   ├─ Categories Dropdown
+ │   │   ├─ "Biz haqimizda" Link
+ │   │   ├─ Language Selector
+ │   │   └─ "Muammo qo'shish" Button
+ │   │
+ │   ├─ Hero.jsx
+ │   │   ├─ Background Vector
+ │   │   ├─ Main Heading
+ │   │   └─ Subtitle
+ │   │
+ │   ├─ Categories.jsx
+ │   │   └─ Category Buttons [×12]
+ │   │
+ │   ├─ SectionsGrid.jsx
+ │   │   ├─ SectionCard.jsx [×4 initially]
+ │   │   │   ├─ Title
+ │   │   │   ├─ Description (3 lines)
+ │   │   │   └─ Date
+ │   │   └─ "Ko'proq muammolar" Button
+ │   │
+ │   └─ Footer.jsx
+ │       ├─ CTA Heading
+ │       ├─ Description
+ │       └─ Action Buttons
+ │
+ └─ SectionDetail.jsx (Detail Page)
+     ├─ Navbar.jsx (shared)
+     ├─ Back Button
+     ├─ Section Header
+     ├─ Section Content
+     └─ Action Buttons
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                           STATE MANAGEMENT                               │
+└─────────────────────────────────────────────────────────────────────────┘
+
+App.jsx State:
+  ├─ activeCategory: string
+  ├─ language: string
+  ├─ categories: array
+  └─ sections: array
+
+SectionsGrid.jsx State:
+  └─ visibleCount: number (4, 8, 12...)
+
+Navbar.jsx State:
+  ├─ isDropdownOpen: boolean
+  └─ isLangDropdownOpen: boolean
+
+SectionDetail.jsx State:
+  └─ section: object
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                          DATA FLOW DIAGRAM                               │
+└─────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────┐
+│   Backend   │
+│     API     │
+└──────┬──────┘
+       │
+       │ (Future)
+       ├──→ GET /categories
+       ├──→ GET /sections?category=X
+       └──→ GET /sections/:id
+       │
+       ↓
+┌─────────────┐      Pass Props      ┌──────────────┐
+│   App.jsx   │──────────────────────→│  Categories  │
+│             │                       └──────────────┘
+│  ├─ State   │
+│  └─ Logic   │      Pass Props      ┌──────────────┐
+│             │──────────────────────→│ SectionsGrid │
+└──────┬──────┘                       │              │
+       │                              │  ├─ Filter   │
+       │                              │  └─ Display  │
+       │                              └──────┬───────┘
+       │                                     │
+       │      Pass Props                     │
+       └────────────────────────────────────→│
+                                             ↓
+                                   ┌──────────────┐
+                                   │ SectionCard  │
+                                   │              │
+                                   │  onClick()   │
+                                   └──────┬───────┘
+                                          │
+                                          │ Navigate
+                                          ↓
+                                   ┌──────────────┐
+                                   │SectionDetail │
+                                   └──────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         USER INTERACTION FLOW                            │
+└─────────────────────────────────────────────────────────────────────────┘
+
+1. Page Load
+   └─→ main.jsx loads
+       └─→ App.jsx renders
+           └─→ All components render
+               └─→ Mock data displays
+
+2. Category Click
+   └─→ User clicks category button
+       └─→ Categories.jsx calls onCategoryChange()
+           └─→ App.jsx updates activeCategory
+               └─→ SectionsGrid filters sections
+                   └─→ Only relevant cards show
+
+3. Load More Click
+   └─→ User clicks "Ko'proq muammolar"
+       └─→ SectionsGrid updates visibleCount (+4)
+           └─→ 4 more cards appear
+               └─→ Button hides if all shown
+
+4. Section Card Click
+   └─→ User clicks a section card
+       └─→ SectionCard calls onClick()
+           └─→ SectionsGrid navigates to detail
+               └─→ SectionDetail renders
+                   └─→ Full content displays
+
+5. Back Button Click
+   └─→ User clicks back button
+       └─→ SectionDetail navigates to home
+           └─→ App.jsx renders
+               └─→ Previous state restored
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                          FILE DEPENDENCIES                               │
+└─────────────────────────────────────────────────────────────────────────┘
+
+main.jsx
+  ├─ Imports: React, ReactDOM, BrowserRouter
+  ├─ Imports: App.jsx, SectionDetail.jsx
+  └─ Imports: index.css
+
+App.jsx
+  ├─ Imports: React
+  ├─ Imports: Navbar, Hero, Categories, SectionsGrid, Footer
+  └─ Imports: App.css
+
+Navbar.jsx
+  ├─ Imports: React, useState, useRef, useEffect
+  └─ Imports: Navbar.css
+
+Hero.jsx
+  ├─ Imports: React
+  └─ Imports: Hero.css
+
+Categories.jsx
+  ├─ Imports: React
+  └─ Imports: Categories.css
+
+SectionsGrid.jsx
+  ├─ Imports: React, useState, useNavigate
+  ├─ Imports: SectionCard
+  └─ Imports: SectionsGrid.css
+
+SectionCard.jsx
+  ├─ Imports: React
+  └─ Imports: SectionCard.css
+
+Footer.jsx
+  ├─ Imports: React
+  └─ Imports: Footer.css
+
+SectionDetail.jsx
+  ├─ Imports: React, useParams, useNavigate
+  ├─ Imports: Navbar
+  └─ Imports: SectionDetail.css
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                       FUTURE ARCHITECTURE (API)                          │
+└─────────────────────────────────────────────────────────────────────────┘
+
+                     ┌─────────────┐
+                     │   Backend   │
+                     │   Server    │
+                     └──────┬──────┘
+                            │
+          ┌─────────────────┼─────────────────┐
+          │                 │                 │
+     GET /categories   GET /sections   GET /sections/:id
+          │                 │                 │
+          └─────────────────┼─────────────────┘
+                            │
+                     ┌──────▼───────┐
+                     │ src/services │
+                     │    api.js    │
+                     └──────┬───────┘
+                            │
+          ┌─────────────────┼─────────────────┐
+          │                 │                 │
+    getCategories()   getSections()   getSectionById()
+          │                 │                 │
+          └─────────────────┼─────────────────┘
+                            │
+                     ┌──────▼───────┐
+                     │  Components  │
+                     │  (React)     │
+                     └──────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                      RESPONSIVE BREAKPOINTS                              │
+└─────────────────────────────────────────────────────────────────────────┘
+
+Desktop (1024px+)
+  ├─ 3-column grid
+  ├─ Full navbar
+  └─ All features visible
+
+Tablet (768px - 1023px)
+  ├─ 2-column grid
+  ├─ Full navbar
+  └─ Adjusted spacing
+
+Mobile (<768px)
+  ├─ 1-column layout
+  ├─ Simplified navbar
+  └─ Touch-optimized
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         STYLING HIERARCHY                                │
+└─────────────────────────────────────────────────────────────────────────┘
+
+index.css (Global Reset)
+  │
+  └─→ App.css (Variables & Base)
+        │
+        ├─→ Navbar.css
+        ├─→ Hero.css
+        ├─→ Categories.css
+        ├─→ SectionsGrid.css
+        │     └─→ SectionCard.css
+        ├─→ Footer.css
+        └─→ SectionDetail.css
+
+CSS Variables in App.css:
+  ├─ --primary-green: #C5F82A
+  ├─ --dark-bg: #1A1A1A
+  ├─ --light-bg: #F5F5F5
+  ├─ --text-dark: #000000
+  ├─ --text-light: #666666
+  ├─ --white: #FFFFFF
+  ├─ --border-radius: 24px
+  ├─ --border-radius-sm: 16px
+  └─ --transition: all 0.3s ease
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+LEGEND:
+  ┌─┐  = Container/Wrapper
+  │    = Connection/Flow
+  ├─   = Branch/Child
+  └─   = Terminal/End
+  →    = Data/Event Flow
+  ×N   = Multiple Instances
+  [×12]= Fixed Number
+
+═══════════════════════════════════════════════════════════════════════════
