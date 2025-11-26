@@ -1,0 +1,29 @@
+<svg width="2766" height="2106" viewBox="0 0 2766 2106" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="blur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="434.96" />
+    </filter>
+  </defs>
+
+  <!-- Circle 1: Yellow-Green -->
+  <g transform="translate(-1120.04, -2078.13) rotate(156.57, 1383.2, 1053.01)">
+    <circle
+      cx="1383.2"
+      cy="1053.01"
+      r="1383.2"
+      fill="#E4FF0E"
+      filter="url(#blur)"
+    />
+  </g>
+
+  <!-- Circle 2: Cyan -->
+  <g transform="translate(600, -2078.13) rotate(156.57, 1383.2, 1053.01)">
+    <circle
+      cx="1383.2"
+      cy="1053.01"
+      r="1383.2"
+      fill="#88FFD4"
+      filter="url(#blur)"
+    />
+  </g>
+</svg>

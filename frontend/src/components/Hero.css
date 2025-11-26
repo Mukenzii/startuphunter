@@ -13,16 +13,11 @@
   z-index: 0;
   background-image: url('/shape.svg');
   background-size: cover;
-  background-position: center;
-<<<<<<< Updated upstream
-  filter: blur(40px); /* <-- добавляешь тут */
-=======
+  background-position: center top;
   background-repeat: no-repeat;
->>>>>>> Stashed changes
+  overflow: hidden;
 }
 
-
-  /* Add your green vector SVG as background here */
 
 
 .hero-content {
@@ -35,21 +30,23 @@
 
 .hero-title {
   font-size: 64px;
-  font-weight: 700;
-  line-height: 1.2;
+  font-weight: 800;
+  line-height: 90%;
   color: var(black);
   margin-bottom: 24px;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.04em;
+  font-family: 'Inter Display', sans-serif;
 }
 
 .hero-subtitle {
   font-size: 20px;
   font-weight: 400;
   line-height: 1.5;
-  color: var(black);
-  max-width: 700px;
+  color: black;
+  max-width: 900px;
   margin: 0 auto;
-  opacity: 0.8;
+  opacity: 1;
+  font-family: 'Inter Display', sans-serif;
 }
 
 /* Responsive */

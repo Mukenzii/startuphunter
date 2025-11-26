@@ -4,7 +4,7 @@ import './SectionsGrid.css';
 import SectionCard from './SectionCard';
 
 const SectionsGrid = ({ sections, activeCategory }) => {
-  const [visibleCount, setVisibleCount] = useState(4);
+  const [visibleCount, setVisibleCount] = useState(6);
   const navigate = useNavigate();
 
   // Filter sections based on active category
@@ -19,7 +19,7 @@ const SectionsGrid = ({ sections, activeCategory }) => {
   const hasMore = visibleCount < filteredSections.length;
 
   const handleLoadMore = () => {
-    setVisibleCount(prev => prev + 4);
+    setVisibleCount(prev => prev + 6);
   };
 
   const handleSectionClick = (sectionId) => {
