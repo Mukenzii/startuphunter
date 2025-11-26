@@ -36,7 +36,7 @@
 .section-detail-header {
   margin-bottom: 32px;
   padding-bottom: 32px;
-  border-bottom: 1px solid #E0E0E0;
+
 }
 
 .section-detail-meta {
@@ -47,10 +47,10 @@
 }
 
 .section-detail-category {
-  background-color: var(--primary-green);
+  background-color:F7F7F7;;
   color: var(--text-dark);
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 00;
   padding: 6px 16px;
   border-radius: 16px;
 }

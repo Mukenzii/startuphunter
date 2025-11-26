@@ -1,7 +1,8 @@
 .categories-section {
-  background-color: var(--light-bg);
   padding: 40px 0;
-  border-bottom: 1px solid #E0E0E0;
+  border-bottom: 0px solid #E0E0E0;
+  background: transparent;
+  overflow: visible;
 }
 
 .categories-container {

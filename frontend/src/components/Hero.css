@@ -15,10 +15,8 @@
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;
-  overflow: hidden;
+  overflow: visible;
 }
-
-
 
 .hero-content {
   position: relative;
@@ -26,6 +24,7 @@
   max-width: 1400px;
   margin: 0 auto;
   text-align: center;
+  overflow: visible;
 }
 
 .hero-title {
