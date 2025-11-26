@@ -1,6 +1,5 @@
 .footer {
   padding: 80px 40px;
-  border-top: 1px solid #E0E0E0;
 }
 
 .footer-container {
@@ -15,7 +14,7 @@
   line-height: 1.2;
   color: var(--text-dark);
   margin-bottom: 24px;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.04em;
 }
 
 .footer-description {

@@ -1,7 +1,8 @@
 .categories-section {
-  background-color: transparent;
-  padding: 41px 0;
-
+  padding: 40px 0;
+  border-bottom: 0px solid #E0E0E0;
+  background: transparent;
+  overflow: visible;
 }
 
 .categories-container {
@@ -24,6 +25,7 @@
   font-weight: 500;
   padding: 12px 24px;
   border-radius: 24px;
+  border: 1px solid transparent;
   transition: var(--transition);
   white-space: nowrap;
 }

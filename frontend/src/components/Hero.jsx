@@ -5,6 +5,9 @@ const Hero = () => {
   return (
     <section className="hero">
       <div className="hero-background">
+        <div class="scc">
+</div>
+
         {/* Add your green vector SVG background here */}
       </div>
       <div className="hero-content">

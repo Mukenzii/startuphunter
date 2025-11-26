@@ -20,11 +20,12 @@
 }
 
 .section-card-title {
-  font-size: 20px;
+  font-size: 32px;
   font-weight: 600;
-  line-height: 1.4;
+  line-height: 100%;
   color: var(--text-dark);
   margin-bottom: 16px;
+  letter-spacing: -0.04em;
 }
 
 .section-card-description {
@@ -47,7 +48,6 @@
   justify-content: flex-start;
   align-items: center;
   padding-top: 16px;
-  border-top: 1px solid #F0F0F0;
 }
 
 .section-card-date {
