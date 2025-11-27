@@ -3,27 +3,20 @@ import { useNavigate } from 'react-router-dom';
 import './SectionsGrid.css';
 import SectionCard from './SectionCard';
 
-const SectionsGrid = ({ sections, activeCategory }) => {
+const SectionsGrid = ({ sections }) => {  // Remove activeCategory prop
   const [visibleCount, setVisibleCount] = useState(6);
   const navigate = useNavigate();
 
-  // Filter sections based on active category
-  const filteredSections = activeCategory === 'All' 
-    ? sections 
-    : sections.filter(section => section.category === activeCategory);
+  // Use sections directly - no filtering needed
+  const visibleSections = sections.slice(0, visibleCount);
 
-  // Get visible sections
-  const visibleSections = filteredSections.slice(0, visibleCount);
-
-  // Check if there are more sections to load
-  const hasMore = visibleCount < filteredSections.length;
+  const hasMore = visibleCount < sections.length;
 
   const handleLoadMore = () => {
     setVisibleCount(prev => prev + 6);
   };
 
   const handleSectionClick = (sectionId) => {
-    // Navigate to section detail page
     navigate(`/section/${sectionId}`);
   };
 

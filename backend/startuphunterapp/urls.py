@@ -1,7 +1,14 @@
 from django.urls import path
+from rest_framework.urlpatterns import format_suffix_patterns
 
-from . import views
+
+from .views import CategoryList, get_problems_by_category
+
 
 urlpatterns = [
-    path("",  views.index, name='index')
+    path("categories/", CategoryList.as_view()),
+    path('problems/category/<str:category_name>/', get_problems_by_category),
+
 ]
+
+urlpatterns = format_suffix_patterns(urlpatterns)

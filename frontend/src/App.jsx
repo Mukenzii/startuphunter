@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -9,110 +9,31 @@ import Footer from './components/Footer';
 function App() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [language, setLanguage] = useState('UZ');
+  const [categories, setCategories] = useState([]);
+  const [sections, setSections] = useState([]);
 
-  // Mock data for categories - these will come from your backend
-  const categories = [
-    'All',
-    'No-code',
-    'Marketing va Sotuv',
-    'Retail',
-    'HR & Recruitment',
-    'Meditsina va Sog\'liqni saqlash',
-    'Biznes',
-    'Logistika',
-    'Moliya va buxgalteriya',
-    'Huquqshunoslik',
-    'Oziq-ovqat',
-    'Ta\'lim'
-  ];
+  // Fetch categories once on mount
+  useEffect(() => {
+    fetch('http://localhost:8000/startuphunterapp/categories/')
+      .then(response => response.json())
+      .then(data => {
+        const categoryNames = ['All', ...data.map(cat => cat.title)];
+        setCategories(categoryNames);
+      })
+      .catch(error => console.error('Error:', error));
+  }, []);
 
-  // Mock data for sections - these will come from your backend
-  const sections = [
-    {
-      id: 1,
-      title: 'This section is currently empty',
-      description: 'Select products from the catalogue and they will be waiting for you here',
-      date: '12.04.2025',
-      category: 'All'
-    },
-    {
-      id: 2,
-      title: 'This section is currently empty',
-      description: 'Select products from the catalogue and they will be waiting for you here',
-      date: '12.04.2025',
-      category: 'All'
-    },
-    {
-      id: 3,
-      title: 'This section is currently empty',
-      description: 'Select products from the catalogue and they will be waiting for you here',
-      date: '12.04.2025',
-      category: 'All'
-    },
-    {
-      id: 4,
-      title: 'This section is currently empty',
-      description: 'Select products from the catalogue and they will be waiting for you here',
-      date: '12.04.2025',
-      category: 'All'
-    },
-    {
-      id: 5,
-      title: 'This section is currently empty',
-      description: 'Select products from the catalogue and they will be waiting for you here',
-      date: '12.04.2025',
-      category: 'All'
-    },
-    {
-      id: 6,
-      title: 'This section is currently empty',
-      description: 'Select products from the catalogue and they will be waiting for you here',
-      date: '12.04.2025',
-      category: 'All'
-    },
-    {
-      id: 7,
-      title: 'This section is currently empty',
-      description: 'Select products from the catalogue and they will be waiting for you here',
-      date: '12.04.2025',
-      category: 'All'
-    },
-    {
-      id: 8,
-      title: 'This section is currently empty',
-      description: 'Select products from the catalogue and they will be waiting for you here',
-      date: '12.04.2025',
-      category: 'All'
-    },
-    {
-      id: 9,
-      title: 'This section is currently empty',
-      description: 'Select products from the catalogue and they will be waiting for you here',
-      date: '12.04.2025',
-      category: 'No-code'
-    },
-    {
-      id: 10,
-      title: 'This section is currently empty',
-      description: 'Select products from the catalogue and they will be waiting for you here',
-      date: '12.04.2025',
-      category: 'No-code'
-    },
-    {
-      id: 11,
-      title: 'This section is currently empty',
-      description: 'Select products from the catalogue and they will be waiting for you here',
-      date: '12.04.2025',
-      category: 'Marketing va Sotuv'
-    },
-    {
-      id: 12,
-      title: 'This section is currently empty',
-      description: 'Select products from the catalogue and they will be waiting for you here',
-      date: '12.04.2025',
-      category: 'Marketing va Sotuv'
-    }
-  ];
+  useEffect(() => {
+    const url = `http://localhost:8000/startuphunterapp/problems/category/${encodeURIComponent(activeCategory)}/`;
+
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        console.log('Sections:', data);
+        setSections(data);
+      })
+      .catch(error => console.error('Error:', error));
+  }, [activeCategory]);
 
   const handleCategoryChange = (category) => {
     setActiveCategory(category);
@@ -124,18 +45,18 @@ function App() {
 
   return (
     <div className="app">
-      <Navbar 
+      <Navbar
         language={language}
         onLanguageChange={handleLanguageChange}
         categories={categories}
       />
       <Hero />
-      <Categories 
+      <Categories
         categories={categories}
         activeCategory={activeCategory}
         onCategoryChange={handleCategoryChange}
       />
-      <SectionsGrid 
+      <SectionsGrid
         sections={sections}
         activeCategory={activeCategory}
       />
