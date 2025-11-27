@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import logo from './logo.svg';
 
@@ -7,6 +8,7 @@ const Navbar = ({ language, onLanguageChange, categories }) => {
   const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const langDropdownRef = useRef(null);
+  const navigate = useNavigate();
 
   const languages = ['UZ', 'RU', 'EN'];
 
@@ -36,10 +38,14 @@ const Navbar = ({ language, onLanguageChange, categories }) => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        {/* Logo - placeholder for SVG */}
-        <div className="navbar-logo">
+        {/* Logo - click to go to homepage */}
+        <button
+          className="navbar-logo"
+          type="button"
+          onClick={() => navigate('/')}
+        >
           <img src={logo} alt="Muammo Ixtier" />
-        </div>
+        </button>
 
         {/* Center section with categories and about */}
         <div className="navbar-center">
@@ -80,7 +86,12 @@ const Navbar = ({ language, onLanguageChange, categories }) => {
             )}
           </div>
 
-          <button className="navbar-link">Biz haqimizda</button>
+          <button 
+            className="navbar-link"
+            onClick={() => navigate('/about')}
+          >
+            Biz haqimizda
+          </button>
         </div>
 
         {/* Right section with language and login */}
@@ -90,9 +101,7 @@ const Navbar = ({ language, onLanguageChange, categories }) => {
               className="language-toggle"
               onClick={toggleLangDropdown}
             >
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <circle cx="10" cy="10" r="9" stroke="currentColor" strokeWidth="2"/>
-              </svg>
+              <img src="/globe.svg" alt="" className="language-globe" />
               {language}
               <svg 
                 className={`arrow ${isLangDropdownOpen ? 'rotate' : ''}`}
@@ -129,7 +138,12 @@ const Navbar = ({ language, onLanguageChange, categories }) => {
             )}
           </div>
 
-          <button className="login-button">Muammo qo'shish</button>
+          <button
+            className="login-button"
+            onClick={() => navigate('/add-problem')}
+          >
+            Muammo qo'shish
+          </button>
         </div>
       </div>
     </nav>

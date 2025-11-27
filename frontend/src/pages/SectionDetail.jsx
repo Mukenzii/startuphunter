@@ -7,6 +7,21 @@ const SectionDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const categories = [
+    'All',
+    'No-code',
+    'Marketing va Sotuv',
+    'Retail',
+    'HR & Recruitment',
+    "Meditsina va Sog'liqni saqlash",
+    'Biznes',
+    'Logistika',
+    'Moliya va buxgalteriya',
+    'Huquqshunoslik',
+    'Oziq-ovqat',
+    "Ta'lim",
+  ];
+
   // Mock data - replace with actual API call
   const sectionData = {
     id: id,
@@ -38,7 +53,7 @@ const SectionDetail = () => {
       <Navbar 
         language="UZ"
         onLanguageChange={() => {}}
-        categories={[]}
+        categories={categories}
       />
       
       <div className="section-detail-container">

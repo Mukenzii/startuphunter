@@ -1,6 +1,7 @@
 .categories-section {
+  background-color: var(--light-bg);
   padding: 40px 0;
-  border-bottom: 0px solid #E0E0E0;
+  border-bottom: 1px solid #E0E0E0;
 }
 
 .categories-container {
@@ -40,7 +41,7 @@
 }
 
 .category-btn.active:hover {
-  background-color: #1A2B01;
+  background-color: #333333;
 }
 
 /* Responsive */

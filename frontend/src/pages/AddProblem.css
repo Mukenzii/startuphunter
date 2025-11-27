@@ -1,0 +1,231 @@
+.add-problem-page {
+  min-height: 100vh;
+  background-color: var(--light-bg, #f5f5f5);
+  padding-top: 80px; /* space for fixed navbar */
+}
+
+.add-problem-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 40px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 80px); /* full viewport height minus navbar */
+}
+
+.add-problem-card {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 40px;
+  background-color: var(--white, #ffffff);
+  border-radius: 32px;
+  padding: 48px 48px 36px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 1000px;
+}
+
+.add-problem-left {
+  border-right: 1px solid #ebecef;
+  padding-right: 40px;
+}
+
+.step-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background-color: #f1f3f6;
+  color: #202123;
+  margin-bottom: 20px;
+}
+
+.add-problem-title {
+  font-size: 32px;
+  line-height: 1.3;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+}
+
+.add-problem-example-label {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.add-problem-example {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #4b5563;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #f9fafb;
+  border: 1px dashed #d1d5db;
+}
+
+.add-problem-right {
+  display: flex;
+  align-items: stretch;
+}
+
+.add-problem-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: slideIn 0.35s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.add-problem-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.add-problem-textarea {
+  min-height: 190px;
+  resize: vertical;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid #d1d5db;
+  font-size: 15px;
+  line-height: 1.5;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+}
+
+.add-problem-textarea:focus {
+  border-color: #111827;
+  box-shadow: 0 0 0 1px #11182710;
+  transform: translateY(-1px);
+}
+
+.add-problem-textarea::placeholder {
+  color: #9ca3af;
+}
+
+.add-problem-button {
+  align-self: flex-start;
+  margin-top: 4px;
+  padding: 12px 28px;
+  border-radius: 999px;
+  border: none;
+  background-color: #111827;
+  color: white;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.18s ease, transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.add-problem-button:hover {
+  background-color: #020617;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.22);
+}
+
+.add-problem-button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.add-problem-google-button {
+  background-color: #ffffff;
+  color: #111827;
+  border: 1px solid #d1d5db;
+}
+
+.add-problem-google-button:hover {
+  background-color: #f9fafb;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+}
+
+.add-problem-complete {
+  background-color: var(--white, #ffffff);
+  border-radius: 24px;
+  padding: 48px 40px;
+  text-align: center;
+}
+
+.add-problem-complete-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #111827;
+}
+
+.add-problem-complete-text {
+  font-size: 16px;
+  color: #4b5563;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+@media (max-width: 960px) {
+  .add-problem-container {
+    padding: 40px 24px 60px;
+  }
+
+  .add-problem-card {
+    grid-template-columns: 1fr;
+    padding: 30px 24px 24px;
+  }
+
+  .add-problem-left {
+    border-right: none;
+    border-bottom: 1px solid #ebecef;
+    padding-right: 0;
+    padding-bottom: 20px;
+    margin-bottom: 8px;
+  }
+}
+
+@media (max-width: 640px) {
+  .add-problem-card {
+    border-radius: 18px;
+    padding: 24px 18px 18px;
+  }
+
+  .add-problem-title {
+    font-size: 22px;
+  }
+
+  .add-problem-example {
+    font-size: 14px;
+  }
+
+  .add-problem-textarea {
+    min-height: 150px;
+  }
+}
+
+
