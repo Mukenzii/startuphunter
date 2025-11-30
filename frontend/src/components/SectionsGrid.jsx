@@ -27,24 +27,44 @@ const SectionsGrid = ({ sections, activeCategory }) => {
     navigate(`/section/${sectionId}`);
   };
 
+  const handleAddProblem = () => {
+    navigate('/add-problem');
+  };
+
   return (
     <div className="sections-grid-wrapper">
-      <div className="sections-grid">
-        {visibleSections.map((section) => (
-          <SectionCard
-            key={section.id}
-            section={section}
-            onClick={() => handleSectionClick(section.id)}
-          />
-        ))}
-      </div>
-
-      {hasMore && (
-        <div className="load-more-container">
-          <button className="load-more-btn" onClick={handleLoadMore}>
-            Ko'proq muammolar
-          </button>
+      {visibleSections.length === 0 ? (
+        <div className="sections-empty-state">
+          <div className="empty-card">
+            <p className="empty-title">Bu kategoriyada hozircha hech narsa yo‘q.</p>
+            <p className="empty-text">
+              Agar sizda muammo bo‘lsa, uni ulashing — uni birinchi bo‘lib siz qo‘shishingiz mumkin.
+            </p>
+            <button className="empty-action" onClick={handleAddProblem}>
+              Muammo qo‘shish
+            </button>
+          </div>
         </div>
+      ) : (
+        <>
+          <div className="sections-grid">
+            {visibleSections.map((section) => (
+              <SectionCard
+                key={section.id}
+                section={section}
+                onClick={() => handleSectionClick(section.id)}
+              />
+            ))}
+          </div>
+
+          {hasMore && (
+            <div className="load-more-container">
+              <button className="load-more-btn" onClick={handleLoadMore}>
+                Ko'proq muammolar
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

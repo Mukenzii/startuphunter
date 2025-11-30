@@ -36,12 +36,7 @@
 
 /* Center section */
 .navbar-center {
-  background: none;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex: 1;
-  justify-content: center;
+  display: none;
 }
 
 .navbar-link {
