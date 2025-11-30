@@ -46,52 +46,7 @@ const Navbar = ({ language, onLanguageChange, categories }) => {
           <img src={logo} alt="Muammo Ixtier" />
         </button>
 
-        {/* Center section with categories and about */}
-        <div className="navbar-center">
-          <div className="dropdown" ref={dropdownRef}>
-            <button 
-              className={`dropdown-toggle ${isDropdownOpen ? 'active' : ''}`}
-              onClick={toggleDropdown}
-            >
-              Kategoriyalar
-              <svg 
-                className={`arrow ${isDropdownOpen ? 'rotate' : ''}`}
-                width="12" 
-                height="8" 
-                viewBox="0 0 12 8" 
-                fill="none"
-              >
-                <path 
-                  d="M1 1.5L6 6.5L11 1.5" 
-                  stroke="currentColor" 
-                  strokeWidth="2" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-            
-            {isDropdownOpen && (
-              <div className="dropdown-menu">
-                {categories.map((category, index) => (
-                  <button 
-                    key={index}
-                    className="dropdown-item"
-                  >
-                    {category}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <button 
-            className="navbar-link"
-            onClick={() => navigate('/about')}
-          >
-            Biz haqimizda
-          </button>
-        </div>
+        {/* Center section removed per request */}
 
         {/* Right section with language and login */}
         <div className="navbar-right">
