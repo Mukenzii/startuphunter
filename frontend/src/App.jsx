@@ -12,7 +12,6 @@ function App() {
   const [categories, setCategories] = useState([]);
   const [sections, setSections] = useState([]);
 
-  // Fetch categories once on mount
   useEffect(() => {
     fetch('http://localhost:8000/startuphunterapp/categories/')
       .then(response => response.json())
