@@ -13,7 +13,6 @@ class Categories(models.Model):
 
 
 
-
 class UserProblems(models.Model):
     category = models.ForeignKey(Categories, on_delete=models.CASCADE)
 
@@ -24,10 +23,10 @@ class UserProblems(models.Model):
     q2 = models.TextField()
     q3 = models.TextField()
     q4 = models.TextField()
-    q5 = models.TextField()
-
-    title = models.CharField(max_length=255, blank=True)
-
+    user_contact = models.CharField(max_length=100, default="")
+    title = models.CharField(max_length=80, blank=True)
+    published = models.BooleanField(default=False)
+    
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

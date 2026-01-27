@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import './AddProblem.css';
 
 const AddProblem = () => {
   const [language, setLanguage] = useState('UZ');
-
-  const categories = ['All', 'No-code'];
+  const [categories, setCategories] = useState([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
+  const [categoryError, setCategoryError] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
 
   const questions = [
     {
@@ -16,23 +18,23 @@ const AddProblem = () => {
     {
       id: 2,
       title: '2-qadam. Kimlar bu muammoga duch kelmoqda?',
-      placeholder: 'Maʼlum auditoriyani iloji boricha aniqroq tasvirlab bering...',
+      placeholder: "Ma'lum auditoriyani iloji boricha aniqroq tasvirlab bering...",
     },
     {
       id: 3,
-      title: "3-qadam. Hozir odamlar bu muammoni qanday yechishmoqda?",
+      title: '3-qadam. Hozir odamlar bu muammoni qanday yechishmoqda?',
       placeholder:
         'Odamlar hozirda foydalanayotgan yechimlar, ularning kamchiliklari haqida yozing...',
     },
     {
       id: 4,
-      title: '4-qadam. Bu muammo qanchalik ogʻriqli?',
+      title: "4-qadam. Bu muammo qanchalik og'riqli?",
       placeholder:
         'Nega bu muammo muhim? Odamlar bu muammo tufayli nimalarga duch kelishmoqda?',
     },
     {
       id: 5,
-      title: '5-qadam. Siz bilan bogʻlanishimiz uchun kontakt maʼlumotlaringizni qoldiring',
+      title: '5-qadam. Ismingiz, kontakt va kategoriyani tanlang',
       placeholder: '',
     },
   ];
@@ -50,6 +52,26 @@ const AddProblem = () => {
   const [submitError, setSubmitError] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  useEffect(() => {
+    setCategoriesLoading(true);
+    setCategoryError('');
+    fetch('http://localhost:8000/startuphunterapp/categories/')
+      .then((res) => {
+        if (!res.ok) throw new Error("Kategoriyalarni yuklab bo'lmadi");
+        return res.json();
+      })
+      .then((data) => {
+        setCategories(data);
+        if (data.length > 0 && !selectedCategory) {
+          setSelectedCategory(String(data[0].id));
+        }
+      })
+      .catch((err) => {
+        setCategoryError(err.message || 'Kategoriyalarni yuklashda xatolik');
+      })
+      .finally(() => setCategoriesLoading(false));
+  }, []);
+
   const handleAnswerChange = (e) => {
     const value = e.target.value;
     const questionId = questions[currentStep].id;
@@ -64,52 +86,60 @@ const AddProblem = () => {
 
     if (currentStep < questions.length - 1) {
       setCurrentStep((prev) => prev + 1);
-    } else {
-      if (!name.trim() || !contact.trim()) return;
-      setSubmitting(true);
-      setSubmitError('');
-
-      const payload = {
-        category: 1, // adjust when category selection is available
-        username: name,
-        country: 'Uzbekistan',
-        q1: answers[1],
-        q2: answers[2],
-        q3: answers[3],
-        q4: answers[4],
-        user_contact: contact,
-      };
-
-      fetch('http://localhost:8000/startuphunterapp/problems/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      })
-        .then((res) => {
-          if (!res.ok) throw new Error('Yuborishda xatolik');
-          return res.json();
-        })
-        .then(() => {
-          setIsSubmitted(true);
-        })
-        .catch((err) => {
-          setSubmitError(err.message || "Yuborishda muammo yuz berdi");
-        })
-        .finally(() => setSubmitting(false));
+      return;
     }
+
+    if (!name.trim() || !contact.trim() || !selectedCategory) {
+      setSubmitError("Iltimos ism, kontakt va kategoriyani to'ldiring");
+      return;
+    }
+
+    setSubmitting(true);
+    setSubmitError('');
+
+    const payload = {
+      category: Number(selectedCategory),
+      username: name,
+      country: 'Uzbekistan',
+      q1: answers[1],
+      q2: answers[2],
+      q3: answers[3],
+      q4: answers[4],
+      user_contact: contact,
+    };
+
+    fetch('http://localhost:8000/startuphunterapp/problems/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('Yuborishda xatolik');
+        return res.json();
+      })
+      .then(() => {
+        setIsSubmitted(true);
+      })
+      .catch((err) => {
+        setSubmitError(err.message || 'Yuborishda muammo yuz berdi');
+      })
+      .finally(() => setSubmitting(false));
   };
 
   const currentQuestion = questions[currentStep];
   const isLastStep = currentStep === questions.length - 1;
+  const navbarCategories = ['All', ...categories.map((cat) => cat.title)];
+  const isSubmitDisabled =
+    !name.trim() || !contact.trim() || !selectedCategory || submitting;
 
   return (
     <div className="add-problem-page">
       <Navbar
         language={language}
         onLanguageChange={setLanguage}
-        categories={categories}
+        categories={navbarCategories}
       />
 
       <div className="add-problem-container">
@@ -165,6 +195,30 @@ const AddProblem = () => {
                         required
                       />
                     </label>
+                    <label className="add-problem-label">
+                      Kategoriyani tanlang
+                      <select
+                        className="add-problem-input"
+                        value={selectedCategory}
+                        onChange={(e) => setSelectedCategory(e.target.value)}
+                        disabled={categoriesLoading}
+                        required
+                      >
+                        <option value="">
+                          {categoriesLoading
+                            ? 'Kategoriyalar yuklanmoqda...'
+                            : 'Kategoriya tanlang'}
+                        </option>
+                        {categories.map((category) => (
+                          <option key={category.id} value={category.id}>
+                            {category.title}
+                          </option>
+                        ))}
+                      </select>
+                      {categoryError && (
+                        <span className="add-problem-error">{categoryError}</span>
+                      )}
+                    </label>
                   </div>
                 )}
 
@@ -178,7 +232,7 @@ const AddProblem = () => {
                   <button
                     type="submit"
                     className="add-problem-button"
-                    disabled={!name.trim() || !contact.trim() || submitting}
+                    disabled={isSubmitDisabled}
                   >
                     {submitting ? 'Yuborilmoqda...' : 'Yuborish'}
                   </button>
@@ -193,11 +247,11 @@ const AddProblem = () => {
         ) : (
           <div className="add-problem-complete">
             <h1 className="add-problem-complete-title">
-              Rahmat! Muammoingiz qoʻshildi.
+              Rahmat! Muammoingiz qo'shildi.
             </h1>
             <p className="add-problem-complete-text">
-              Tez orada biz ushbu muammo boʻyicha tahlil va potensial yechim
-              gʻoyalarini tayyorlaymiz.
+              Tez orada biz ushbu muammo bo'yicha tahlil va potensial yechim
+              g'oyalarini tayyorlaymiz.
             </p>
           </div>
         )}

@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import './SectionsGrid.css';
 import SectionCard from './SectionCard';
 
-const SectionsGrid = ({ sections }) => {  // Remove activeCategory prop
-  const [visibleCount, setVisibleCount] = useState(6);
+const SectionsGrid = ({ sections }) => {
+  const [visibleCount, setVisibleCount] = useState(12);
   const navigate = useNavigate();
 
   // Use sections directly - no filtering needed
@@ -12,16 +12,16 @@ const SectionsGrid = ({ sections }) => {  // Remove activeCategory prop
 
   const hasMore = visibleCount < sections.length;
 
-  const handleLoadMore = () => {
-    setVisibleCount(prev => prev + 6);
-  };
-
   const handleSectionClick = (sectionId) => {
     navigate(`/section/${sectionId}`);
   };
 
   const handleAddProblem = () => {
     navigate('/add-problem');
+  };
+
+  const handleLoadMore = () => {
+    setVisibleCount((prev) => prev + 12);
   };
 
   return (

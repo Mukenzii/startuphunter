@@ -1,87 +1,64 @@
 .section-card {
-  background-color: #f7f6f0;
-  border-radius: 18px;
-  padding: 20px 18px;
-  cursor: pointer;
-  transition: var(--transition);
+  width: 100%;
+  max-width: 548.27px;
+  height: 277.6px;
+  border-radius: 51.2px;
+  padding: 25.6px;
+  background-color: #ffffff;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 22px 40px rgba(15, 23, 42, 0.06);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 170px;
-  border: 1px solid #ece9dd;
+  gap: 16px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
 }
 
 .section-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  transform: translateY(-6px);
+  box-shadow: 0 30px 50px rgba(15, 23, 42, 0.1);
 }
 
-.section-card-content {
-  flex: 1;
+.section-card-text {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
 }
 
 .section-card-title {
-  font-size: 17px;
+  font-size: 26px;
   font-weight: 800;
   line-height: 1.3;
-  color: var(--text-dark);
-  margin-bottom: 8px;
-  letter-spacing: -0.01em;
+  color: #0f172a;
+  margin: 0;
+}
+
+.section-card-description {
+  margin: 0;
+  color: #475467;
+  line-height: 1.7;
+  font-size: 16px;
 }
 
 .section-card-footer {
   display: flex;
-  justify-content: center;
   align-items: center;
-  padding-top: 8px;
+  justify-content: space-between;
+  margin-top: auto;
 }
 
 .section-card-date {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
-  color: #3b6b4f;
-  text-align: center;
+  color: #111827;
 }
 
-.section-card-meta {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 8px;
-}
-
-.section-card-country {
-  font-size: 12px;
-  font-weight: 700;
-  color: #30402a;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: #edf0e2;
-  border: 1px solid #dfe3d2;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 1200px) {
   .section-card {
-    padding: 18px;
-    min-height: 160px;
-  }
-  
-  .section-card-title {
-    font-size: 16px;
-  }
-  
-  .section-card-description {
-    font-size: 13px;
-    margin-bottom: 12px;
-  }
-  
-  .section-card-date {
-    font-size: 12px;
+    width: 100%;
+    max-width: 548.27px;
+    height: auto;
   }
 }

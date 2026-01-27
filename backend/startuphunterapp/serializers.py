@@ -10,6 +10,8 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class UserProblemSerializer(serializers.ModelSerializer):
+    category_name = serializers.CharField(source='category.title', read_only=True)
+
     class Meta:
         model = UserProblems
         fields = '__all__'
