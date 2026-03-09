@@ -49,3 +49,9 @@ padding {
   11: x;
   12:  ;
 }
+
+h1.hero-title {
+  font-size: 100px;
+  color: #8a9778;
+  text-align: left;
+}
