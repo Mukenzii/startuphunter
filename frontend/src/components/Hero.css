@@ -1,90 +1,51 @@
-.hero {
-  position: relative;
-  background-color: transparent;
-  padding: 120px 40px 80px;
-  overflow: visible;
+font-size {
+  0: 1;
+  1: 0;
+  2: 0;
+  3: p;
+  4: x;
 }
 
-.hero-background {
-  position: fixed;
-  top: -200px;
-  left: 0;
-  width: 100%;
-  height: 700px;
-  z-index: -1;
-  background-image: url('/shape.svg');
-  background-size: cover;
-  background-position: center top;
-  background-repeat: no-repeat;
-  overflow: visible;
-  pointer-events: none;
+color {
+  0: r;
+  1: g;
+  2: b;
+  3: (;
+  4: 1;
+  5: 2;
+  6: 2;
+  7: ,;
+  8:  ;
+  9: 1;
+  10: 3;
+  11: 3;
+  12: ,;
+  13:  ;
+  14: 1;
+  15: 0;
+  16: 7;
+  17: );
 }
 
-.hero-content {
-  position: relative;
-  z-index: 1;
-  max-width: 1400px;
-  margin: 0 auto;
-  text-align: center;
-  overflow: visible;
+text-align {
+  0: l;
+  1: e;
+  2: f;
+  3: t;
 }
 
-.hero-title {
-  font-size: 64px;
-  font-weight: 800;
-  line-height: 90%;
-  color: var(black);
-  margin-bottom: 24px;
-  letter-spacing: -0.04em;
-  font-family: 'Inter Display', sans-serif;
-}
-
-.hero-subtitle {
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 1.5;
-  color: black;
-  max-width: 900px;
-  margin: 0 auto;
-  opacity: 1;
-  font-family: 'Inter Display', sans-serif;
-}
-
-/* Responsive */
-@media (max-width: 1024px) {
-  .hero {
-    padding: 80px 40px 60px;
-  }
-  
-  .hero-title {
-    font-size: 48px;
-  }
-  
-  .hero-subtitle {
-    font-size: 18px;
-  }
-}
-
-@media (max-width: 768px) {
-  .hero {
-    padding: 60px 24px 40px;
-  }
-  
-  .hero-title {
-    font-size: 36px;
-  }
-  
-  .hero-subtitle {
-    font-size: 16px;
-  }
-}
-
-@media (max-width: 480px) {
-  .hero-title {
-    font-size: 28px;
-  }
-  
-  .hero-subtitle {
-    font-size: 14px;
-  }
+padding {
+  0: 0;
+  1: p;
+  2: x;
+  3:  ;
+  4: 0;
+  5: p;
+  6: x;
+  7:  ;
+  8: 1;
+  9: 0;
+  10: p;
+  11: x;
+  12:  ;
 }
