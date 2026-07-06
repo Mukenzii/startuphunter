@@ -15,8 +15,9 @@ services:
     plan: free
     dockerfilePath: ./backend/Dockerfile
     dockerContext: ./backend
-    # Bind gunicorn to the port Render provides.
-    dockerCommand: gunicorn startuphunter.wsgi:application --bind 0.0.0.0:$PORT
+    # Render's Docker Command overrides the image ENTRYPOINT, so invoke the
+    # entrypoint explicitly (runs migrate/collectstatic/superuser, then gunicorn).
+    dockerCommand: /entrypoint.sh gunicorn startuphunter.wsgi:application --bind 0.0.0.0:$PORT
     healthCheckPath: /admin/login/
     envVars:
       - key: SECRET_KEY
