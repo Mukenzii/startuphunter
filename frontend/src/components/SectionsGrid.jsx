@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './SectionsGrid.css';
 import SectionCard from './SectionCard';
+import { useLang } from '../i18n.jsx';
 
 const SectionsGrid = ({ sections }) => {
   const [visibleCount, setVisibleCount] = useState(12);
   const navigate = useNavigate();
+  const { t } = useLang();
 
   // Use sections directly - no filtering needed
   const visibleSections = sections.slice(0, visibleCount);
@@ -29,12 +31,10 @@ const SectionsGrid = ({ sections }) => {
       {visibleSections.length === 0 ? (
         <div className="sections-empty-state">
           <div className="empty-card">
-            <p className="empty-title">Bu kategoriyada hozircha hech narsa yo‘q.</p>
-            <p className="empty-text">
-              Agar sizda muammo bo‘lsa, uni ulashing — uni birinchi bo‘lib siz qo‘shishingiz mumkin.
-            </p>
+            <p className="empty-title">{t('empty.title')}</p>
+            <p className="empty-text">{t('empty.text')}</p>
             <button className="empty-action" onClick={handleAddProblem}>
-              Muammo qo‘shish
+              {t('nav.add')}
             </button>
           </div>
         </div>
@@ -53,7 +53,7 @@ const SectionsGrid = ({ sections }) => {
           {hasMore && (
             <div className="load-more-container">
               <button className="load-more-btn" onClick={handleLoadMore}>
-                Ko'proq muammolar
+                {t('grid.more')}
               </button>
             </div>
           )}

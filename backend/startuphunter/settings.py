@@ -12,6 +12,24 @@ ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 # ALLOWED_HOSTS = ['*']
 
+# Origins allowed to send unsafe (POST/PUT/DELETE) requests — required for the
+# admin login and any form POST when the app is reached through nginx (:1337)
+# or the Vite dev server (:3000). Add your production URL via the env var.
+CSRF_TRUSTED_ORIGINS = os.environ.get(
+    "DJANGO_CSRF_TRUSTED_ORIGINS",
+    "http://localhost:1337 http://127.0.0.1:1337 "
+    "http://localhost:3000 http://127.0.0.1:3000 "
+    "http://localhost:8000 http://127.0.0.1:8000",
+).split()
+
+# Trust the X-Forwarded-Proto header nginx sets, so CSRF/secure checks work
+# correctly when the app is served behind the proxy (and later over HTTPS).
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+# Google OAuth web client ID (from Google Cloud Console). Used to verify the
+# ID token sent by "Sign in with Google" on the frontend.
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "")
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',

@@ -5,17 +5,20 @@ import App from './App.jsx';
 import SectionDetail from './pages/SectionDetail.jsx';
 import AddProblem from './pages/AddProblem.jsx';
 import About from './pages/About.jsx';
+import { LanguageProvider } from './i18n.jsx';
 import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/section/:id" element={<SectionDetail />} />
-        <Route path="/add-problem" element={<AddProblem />} />
-        <Route path="/about" element={<About />} />
-      </Routes>
-    </BrowserRouter>
+    <LanguageProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="/section/:id" element={<SectionDetail />} />
+          <Route path="/add-problem" element={<AddProblem />} />
+          <Route path="/about" element={<About />} />
+        </Routes>
+      </BrowserRouter>
+    </LanguageProvider>
   </React.StrictMode>,
 );

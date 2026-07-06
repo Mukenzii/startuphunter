@@ -257,4 +257,36 @@
   }
 }
 
+/* Google sign-up block on the last step */
+.add-problem-google {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid #eceef2;
+  border-radius: 16px;
+  background: #fafafa;
+  margin-bottom: 20px;
+}
+
+.google-hint {
+  margin: 0;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.google-btn {
+  min-height: 44px;
+}
+
+.google-signed-in {
+  margin: 0;
+  font-size: 15px;
+  color: #142100;
+}
+
+.google-signed-in strong {
+  font-weight: 600;
+}
+
 

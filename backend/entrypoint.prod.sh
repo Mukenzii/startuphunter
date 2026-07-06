@@ -12,5 +12,6 @@ if [ "$DATABASE" = "postgres" ]; then
 fi
 
 python manage.py migrate
+python manage.py collectstatic --noinput
 
 exec "$@"

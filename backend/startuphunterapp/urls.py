@@ -3,7 +3,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 
 
 from .views import CategoryList, get_problems_by_category, UserProblemCreate
-from .views import get_problem_by_id
+from .views import get_problem_by_id, google_auth
 
 
 urlpatterns = [
@@ -11,6 +11,7 @@ urlpatterns = [
     path('problems/category/<str:category_name>/', get_problems_by_category),
     path('problems/', UserProblemCreate.as_view()),
     path('problems/<int:pk>/', get_problem_by_id),
+    path('auth/google/', google_auth),
 
 ]
 

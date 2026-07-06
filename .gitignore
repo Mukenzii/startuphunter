@@ -1,6 +1,11 @@
 .env
+.env.dev
 env.dev
 .env.*.local
+
+# local binaries / assets not meant for the repo
+*.pdf
+.DS_Store
 
 __pycache__/
 *.py[cod]

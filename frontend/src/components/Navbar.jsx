@@ -1,68 +1,94 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import logo from './logo.svg';
+import { LANGUAGES, useLang } from '../i18n.jsx';
 
-const Navbar = ({ categories }) => {
-  const [theme, setTheme] = useState('light');
-  const [showDarkAlert, setShowDarkAlert] = useState(false);
+const Chevron = () => (
+  <svg className="nav-chevron" viewBox="0 0 12 8" fill="none" aria-hidden="true">
+    <path d="M1 1.5 6 6.5l5-5" stroke="currentColor" strokeWidth="1.6"
+      strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const Globe = () => (
+  <svg className="nav-globe" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
+    <path d="M3 12h18M12 3c2.5 2.5 2.5 15.5 0 18M12 3c-2.5 2.5-2.5 15.5 0 18"
+      stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+  </svg>
+);
+
+const Navbar = () => {
   const navigate = useNavigate();
+  const { lang, setLang, t } = useLang();
+  const [open, setOpen] = useState(false);
+  const switchRef = useRef(null);
 
-  const handleThemeToggle = () => {
-    if (theme === 'light') {
-      setTheme('dark');
-      setShowDarkAlert(true);
-    } else {
-      setTheme('light');
-      setShowDarkAlert(false);
-    }
-  };
+  // Close the dropdown when clicking outside it.
+  useEffect(() => {
+    const onClick = (e) => {
+      if (switchRef.current && !switchRef.current.contains(e.target)) setOpen(false);
+    };
+    document.addEventListener('mousedown', onClick);
+    return () => document.removeEventListener('mousedown', onClick);
+  }, []);
 
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        {/* Logo - click to go to homepage */}
-        <button
-          className="navbar-logo"
-          type="button"
-          onClick={() => navigate('/')}
-        >
+        {/* Logo */}
+        <button className="navbar-logo" type="button" onClick={() => navigate('/')}>
           <img src={logo} alt="Muammo Ixtier" />
         </button>
 
-        {/* Right section with theme toggle and add problem button */}
-        <div className="navbar-right">
-          <button className="theme-toggle" onClick={handleThemeToggle}>
-            {theme === 'light' ? 'Light Mode' : 'Dark Mode'}
+        {/* Center pill */}
+        <div className="navbar-center">
+          <button className="nav-link" type="button" onClick={() => navigate('/about')}>
+            {t('nav.about')}
           </button>
-          <button
-            className="login-button"
-            onClick={() => navigate('/add-problem')}
-          >
-            Muammo qo'shish
+        </div>
+
+        {/* Right section */}
+        <div className="navbar-right">
+          <div className="lang-switch" ref={switchRef}>
+            <button
+              className="lang-pill"
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              aria-haspopup="listbox"
+              aria-expanded={open}
+            >
+              <Globe />
+              <span>{lang.toUpperCase()}</span>
+              <Chevron />
+            </button>
+            {open && (
+              <ul className="lang-menu" role="listbox">
+                {LANGUAGES.map((code) => (
+                  <li key={code}>
+                    <button
+                      type="button"
+                      role="option"
+                      aria-selected={lang === code}
+                      className={`lang-option ${lang === code ? 'active' : ''}`}
+                      onClick={() => {
+                        setLang(code);
+                        setOpen(false);
+                      }}
+                    >
+                      {code.toUpperCase()}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <button className="login-button" onClick={() => navigate('/add-problem')}>
+            {t('nav.add')}
           </button>
         </div>
       </div>
-
-      {showDarkAlert && (
-        <div
-          className="dark-mode-alert-overlay"
-          onClick={() => setShowDarkAlert(false)}
-        >
-          <div className="dark-mode-alert-card" onClick={(e) => e.stopPropagation()}>
-            <h3>Dark rejim tez orada</h3>
-            <p>Dark rejim imkoniyati tez orada foydalanuvchilarga taqdim etiladi.</p>
-            <div className="dark-mode-alert-actions">
-              <button
-                className="dark-mode-alert-close"
-                onClick={() => setShowDarkAlert(false)}
-              >
-                Yopish
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </nav>
   );
 };

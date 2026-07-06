@@ -1,7 +1,13 @@
 .sections-grid-wrapper {
+  width: 100%;
+  /* Same column width + padding as .categories-container so the first card
+     lines up directly under the "All" button. width:100% is required because
+     .app is a flex column — without it, `margin: 0 auto` shrinks this to its
+     content and centers a lone card instead of left-aligning it. */
   max-width: 1400px;
   margin: 0 auto;
-  padding: 60px 40px;
+  padding: 24px 40px 96px;
+  box-sizing: border-box;
 }
 
 .sections-empty-state {
@@ -34,7 +40,7 @@
 }
 
 .empty-action {
-  background-color: var(--text-dark);
+  background-color: var(--text-deep);
   color: var(--white);
   font-size: 15px;
   font-weight: 600;
@@ -46,63 +52,55 @@
 }
 
 .empty-action:hover {
-  background-color: #333333;
   transform: translateY(-2px);
 }
 
 .sections-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-  margin-bottom: 48px;
+  display: flex;
+  flex-wrap: wrap;
   justify-content: flex-start;
-  align-content: flex-start;
-  width: 100%;
-  max-width: calc(548.27px * 3 + 32px);
-  grid-auto-rows: 277.6px;
+  gap: 26px;
+  margin-bottom: 64px;
 }
 
 .load-more-container {
   display: flex;
   justify-content: center;
-  margin-top: 40px;
 }
 
 .load-more-btn {
   background-color: var(--white);
-  color: var(--text-dark);
-  font-size: 16px;
+  color: var(--text-deep);
+  font-family: 'Inter Display', sans-serif;
+  font-size: 20px;
   font-weight: 500;
-  padding: 14px 32px;
-  border-radius: 24px;
-  border: 2px solid var(--text-dark);
+  padding: 19px 32px;
+  border-radius: 26px;
+  border: none;
+  box-shadow: 0 8px 24px rgba(20, 33, 0, 0.06);
   transition: var(--transition);
 }
 
 .load-more-btn:hover {
-  background-color: var(--text-dark);
-  color: var(--white);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 12px 30px rgba(20, 33, 0, 0.12);
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1280px) {
+  .sections-grid-wrapper {
+    padding: 24px 48px 72px;
+  }
   .sections-grid {
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 768px) {
   .sections-grid-wrapper {
-    padding: 40px 24px;
+    padding: 16px 20px 56px;
   }
-  
   .sections-grid {
     grid-template-columns: 1fr;
-  }
-  
-  .load-more-btn {
-    font-size: 15px;
-    padding: 12px 28px;
+    gap: 16px;
   }
 }

@@ -2,10 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import './SectionDetail.css';
+import { useLang } from '../i18n.jsx';
+import { apiUrl } from '../api';
 
 const SectionDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useLang();
 
   const [sectionData, setSectionData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -16,7 +19,7 @@ const SectionDetail = () => {
   useEffect(() => {
     setLoading(true);
     setError(null);
-    const url = `http://localhost:8000/startuphunterapp/problems/${id}/`;
+    const url = apiUrl(`/startuphunterapp/problems/${id}/`);
 
     fetch(url)
       .then((res) => {
@@ -29,13 +32,13 @@ const SectionDetail = () => {
           title: data.title || data.q1?.slice(0, 30) || 'No title',
           date: data.created_at ? new Date(data.created_at).toISOString().slice(0, 10) : '',
           qa: [
-                { question: 'Muammoingizni qisqacha yozing', answer: data.q1 || '' },
-                { question: 'Kimlar bu muammoga duch kelmoqda?', answer: data.q2 || '' },
-                { question: "Hozir odamlar bu muammoni qanday yechishmoqda?", answer: data.q3 || '' },
-                { question: "Bu muammo qanchalik og'riqli?", answer: data.q4 || '' },
-                { 
-                  question: "Kontakt ma'lumotlaringizni qoldiring", 
-                  answer: `${data.username || ''} ${data.user_contact || ''}` 
+                { key: 'detail.q1', answer: data.q1 || '' },
+                { key: 'detail.q2', answer: data.q2 || '' },
+                { key: 'detail.q3', answer: data.q3 || '' },
+                { key: 'detail.q4', answer: data.q4 || '' },
+                {
+                  key: 'detail.q5',
+                  answer: `${data.username || ''} ${data.user_contact || ''}`,
                 },
               ]
         };
@@ -77,7 +80,7 @@ const SectionDetail = () => {
                   strokeLinejoin="round"
                 />
               </svg>
-              Orqaga
+              {t('detail.back')}
             </button>
             <span className="section-detail-date">{dateText}</span>
           </div>
@@ -87,13 +90,13 @@ const SectionDetail = () => {
           </div>
 
           <div className="section-detail-body">
-            {loading && <p className="section-detail-loading">Loading...</p>}
+            {loading && <p className="section-detail-loading">{t('detail.loading')}</p>}
             {error && <p className="section-detail-error">{error}</p>}
             {!loading && sectionData && (
               <div className="section-detail-qa">
                 {sectionData.qa.map((item, idx) => (
                   <div key={idx} className="qa-item">
-                    <p className="qa-question">{item.question}</p>
+                    <p className="qa-question">{t(item.key)}</p>
                     <p className="qa-answer">{item.answer}</p>
                   </div>
                 ))}
@@ -103,10 +106,10 @@ const SectionDetail = () => {
 
           <div className="section-detail-actions">
             <button className="action-button action-button-primary">
-              Muammo ustida ishlash
+              {t('detail.work')}
             </button>
             <button className="action-button action-button-secondary">
-              Bog'lanish
+              {t('detail.contact')}
             </button>
           </div>
         </div>

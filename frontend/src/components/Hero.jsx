@@ -1,23 +1,14 @@
 import React from 'react';
 import './Hero.css';
+import { useLang } from '../i18n.jsx';
 
 const Hero = () => {
+  const { t } = useLang();
   return (
     <section className="hero">
-      <div className="hero-background">
-        <div class="scc">
-</div>
-
-        {/* Add your green vector SVG background here */}
-      </div>
       <div className="hero-content">
-        <h1 className="hero-title">
-          Odamlarga chindan ham<br />
-          kerak bo'lgan startap g'oyalari
-        </h1>
-        <p className="hero-subtitle">
-          Odamlarning yechim uchun pul to'lashga tayyor bo'lgan hal qilinmagan muammolari.
-        </p>
+        <h1 className="hero-title">{t('hero.title')}</h1>
+        <p className="hero-subtitle">{t('hero.subtitle')}</p>
       </div>
     </section>
   );

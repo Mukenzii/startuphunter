@@ -1,28 +1,36 @@
 .footer {
-  padding: 80px 40px;
+  padding: 80px 24px 120px;
 }
 
 .footer-container {
-  max-width: 800px;
+  max-width: 1340px;
   margin: 0 auto;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 38px;
 }
 
 .footer-title {
-  font-size: 48px;
-  font-weight: 700;
-  line-height: 1.2;
+  font-family: 'Inter Display', sans-serif;
+  font-size: clamp(44px, 8vw, 120px);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.06em;
   color: var(--text-dark);
-  margin-bottom: 24px;
-  letter-spacing: -0.04em;
+  margin: 0;
 }
 
 .footer-description {
-  font-size: 16px;
+  font-family: 'Inter Display', sans-serif;
+  font-size: clamp(16px, 1.5vw, 25px);
   font-weight: 400;
-  line-height: 1.6;
-  color: var(--text-light);
-  margin-bottom: 40px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--text-dark);
+  max-width: 876px;
+  margin: 0;
 }
 
 .footer-buttons {
@@ -33,66 +41,44 @@
 }
 
 .footer-btn {
-  font-size: 16px;
+  font-family: 'Inter Display', sans-serif;
+  font-size: clamp(18px, 1.5vw, 25.6px);
   font-weight: 500;
-  padding: 14px 32px;
-  border-radius: 24px;
+  padding: 19px 32px;
+  border-radius: 16px;
   transition: var(--transition);
 }
 
 .footer-btn-primary {
   background-color: var(--text-dark);
   color: var(--white);
+  border: none;
 }
 
 .footer-btn-primary:hover {
-  background-color: #333333;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 20px rgba(20, 33, 0, 0.25);
 }
 
 .footer-btn-secondary {
-  background-color: var(--white);
-  color: var(--text-dark);
-  border: 2px solid var(--text-dark);
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #020203;
+  border: 2.4px solid var(--accent-lime);
 }
 
 .footer-btn-secondary:hover {
-  background-color: var(--text-dark);
-  color: var(--white);
+  background-color: var(--accent-lime);
   transform: translateY(-2px);
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .footer {
-    padding: 60px 24px;
+    padding: 56px 20px 80px;
   }
-  
-  .footer-title {
-    font-size: 36px;
-  }
-  
-  .footer-description {
-    font-size: 15px;
-  }
-  
   .footer-buttons {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .footer-btn {
     width: 100%;
   }
-}
-
-@media (max-width: 480px) {
-  .footer-title {
-    font-size: 28px;
-  }
-  
-  .footer-description {
-    font-size: 14px;
+  .footer-btn {
+    flex: 1;
   }
 }

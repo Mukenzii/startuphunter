@@ -6,6 +6,50 @@ from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework import status
 from django.shortcuts import get_object_or_404
+from django.conf import settings
+from django.contrib.auth import get_user_model
+
+
+@api_view(["POST"])
+def google_auth(request):
+    """Verify a Google ID token ('credential') and sign the user up / in.
+
+    The frontend's "Sign up with Google" button posts the credential here; we
+    verify it against our GOOGLE_CLIENT_ID, then create or fetch a Django user
+    keyed by the Google email. Returns the verified {email, name}.
+    """
+    credential = request.data.get("credential")
+    if not credential:
+        return Response({"detail": "Missing credential."}, status=status.HTTP_400_BAD_REQUEST)
+
+    client_id = getattr(settings, "GOOGLE_CLIENT_ID", "")
+    if not client_id:
+        return Response(
+            {"detail": "Google sign-in is not configured (GOOGLE_CLIENT_ID is empty)."},
+            status=status.HTTP_503_SERVICE_UNAVAILABLE,
+        )
+
+    try:
+        from google.oauth2 import id_token as google_id_token
+        from google.auth.transport import requests as google_requests
+
+        info = google_id_token.verify_oauth2_token(
+            credential, google_requests.Request(), client_id
+        )
+    except Exception:
+        return Response({"detail": "Invalid Google token."}, status=status.HTTP_400_BAD_REQUEST)
+
+    email = info.get("email", "")
+    if not email:
+        return Response({"detail": "Google account has no email."}, status=status.HTTP_400_BAD_REQUEST)
+    name = info.get("name") or email.split("@")[0]
+
+    User = get_user_model()
+    User.objects.get_or_create(
+        username=email,
+        defaults={"email": email, "first_name": name[:30]},
+    )
+    return Response({"email": email, "name": name})
 
 
 class CategoryList(generics.ListAPIView):

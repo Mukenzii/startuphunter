@@ -5,6 +5,7 @@ import Hero from './components/Hero';
 import Categories from './components/Categories';
 import SectionsGrid from './components/SectionsGrid';
 import Footer from './components/Footer';
+import { apiUrl } from './api';
 
 function App() {
   const [activeCategory, setActiveCategory] = useState('All');
@@ -13,17 +14,22 @@ function App() {
   const [sections, setSections] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/startuphunterapp/categories/')
+    fetch(apiUrl('/startuphunterapp/categories/'))
       .then(response => response.json())
       .then(data => {
-        const categoryNames = ['All', ...data.map(cat => cat.title)];
-        setCategories(categoryNames);
+        // Keep the Uzbek title as the value (used for filtering) and carry the
+        // Russian title for display.
+        const cats = [
+          { uz: 'All', ru: 'All' },
+          ...data.map(cat => ({ uz: cat.title, ru: cat.title_ru || cat.title })),
+        ];
+        setCategories(cats);
       })
       .catch(error => console.error('Error:', error));
   }, []);
 
   useEffect(() => {
-    const url = `http://localhost:8000/startuphunterapp/problems/category/${encodeURIComponent(activeCategory)}/`;
+    const url = apiUrl(`/startuphunterapp/problems/category/${encodeURIComponent(activeCategory)}/`);
 
     fetch(url)
       .then(response => response.json())

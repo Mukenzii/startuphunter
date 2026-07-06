@@ -1,24 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Navbar from '../components/Navbar';
 import './About.css';
+import { useLang } from '../i18n.jsx';
 
 const About = () => {
-  const [language, setLanguage] = useState('UZ');
-
-  const categories = [
-    'All',
-    'No-code',
-    'Marketing va Sotuv',
-    'Retail',
-    'HR & Recruitment',
-    'Meditsina va Sog\'liqni saqlash',
-    'Biznes',
-    'Logistika',
-    'Moliya va buxgalteriya',
-    'Huquqshunoslik',
-    'Oziq-ovqat',
-    'Ta\'lim'
-  ];
+  const { t } = useLang();
 
   const scrollToContact = () => {
     const el = document.getElementById('contact-authors');
@@ -29,63 +15,46 @@ const About = () => {
 
   return (
     <div className="about-page">
-      <Navbar 
-        language={language}
-        onLanguageChange={setLanguage}
-        categories={categories}
-      />
+      <Navbar />
 
       <main className="about-wrapper">
         <section className="about-hero">
-          <h1 className="about-title">
-            Startuphunter — o'zbek loyihalari uchun real muammolar va echimlar maydoni
-          </h1>
-          <p className="about-lead">
-            Biz mahsulot yaratuvchilarni, startap asoschilarini va tadbirkorlarni bir joyga to'playmiz. 
-            Platforma orqali foydalanuvchilar hal qilinishi kerak bo'lgan muammolarni ulashadi, 
-            siz esa o'z yechimingiz bilan tezda chiqishingiz mumkin.
-          </p>
+          <h1 className="about-title">{t('about.title')}</h1>
+          <p className="about-lead">{t('about.lead')}</p>
           <div className="about-actions">
             <button className="about-primary" onClick={scrollToContact}>
-              Mualliflar bilan bog'lanish
+              {t('about.contactBtn')}
             </button>
-            <a 
-              className="about-outline" 
-              href="#platform-video"
-            >
-              Loyihaning qisqa videosi
+            <a className="about-outline" href="#platform-video">
+              {t('about.videoBtn')}
             </a>
           </div>
         </section>
 
         <section className="about-grid">
           <div className="about-card story-card">
-            <h3>Missiyamiz</h3>
-            <p>
-              Har kuni ko'plab muammolar aniqlanadi, biroq ularni yechadigan 
-              mahsulotlar yetishmaydi. Startuphunter har kimga muammo va yechimlarni 
-              tez topish, hamkorlar bilan tanishish va fikr almashish imkonini beradi.
-            </p>
+            <h3>{t('about.mission')}</h3>
+            <p>{t('about.missionText')}</p>
             <div className="story-points">
               <div className="story-point">
                 <span className="story-number">01</span>
                 <div>
-                  <h4>Real ehtiyojlar</h4>
-                  <p>Muammolarni foydalanuvchilarning o'zi yuboradi, shuning uchun talab tasdiqlangan.</p>
+                  <h4>{t('about.point1Title')}</h4>
+                  <p>{t('about.point1Text')}</p>
                 </div>
               </div>
               <div className="story-point">
                 <span className="story-number">02</span>
                 <div>
-                  <h4>Hamjamiyat</h4>
-                  <p>Mahsulotchilar, dizaynerlar va tadbirkorlar birgalikda ishlashi uchun xavfsiz maydon.</p>
+                  <h4>{t('about.point2Title')}</h4>
+                  <p>{t('about.point2Text')}</p>
                 </div>
               </div>
               <div className="story-point">
                 <span className="story-number">03</span>
                 <div>
-                  <h4>Tez iteratsiya</h4>
-                  <p>G'oya → prototip → foydalanuvchi fikri siklini tezlashtiramiz.</p>
+                  <h4>{t('about.point3Title')}</h4>
+                  <p>{t('about.point3Text')}</p>
                 </div>
               </div>
             </div>
@@ -93,11 +62,8 @@ const About = () => {
 
           <div className="about-card contact-card" id="contact-authors">
             <div>
-              <h3>Mualliflar bilan to'g'ridan-to'g'ri bog'laning</h3>
-              <p className="contact-text">
-                Hamkorlik, media hamkorlik yoki platformani rivojlantirish bo'yicha 
-                takliflaringiz bormi? Biz har bir fikrni qadrlaymiz.
-              </p>
+              <h3>{t('about.contactTitle')}</h3>
+              <p className="contact-text">{t('about.contactText')}</p>
             </div>
             <div className="contact-actions">
               <a
@@ -106,13 +72,12 @@ const About = () => {
                 target="_blank"
                 rel="noreferrer"
               >
-                Telegramda yozish
+                {t('about.telegramBtn')}
               </a>
             </div>
           </div>
         </section>
       </main>
-
     </div>
   );
 };

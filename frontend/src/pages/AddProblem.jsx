@@ -1,42 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Navbar from '../components/Navbar';
 import './AddProblem.css';
+import { useLang } from '../i18n.jsx';
+import { apiUrl } from '../api';
+
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
+const REQUIRE_GOOGLE = !!GOOGLE_CLIENT_ID;
 
 const AddProblem = () => {
-  const [language, setLanguage] = useState('UZ');
+  const { t, lang } = useLang();
+
   const [categories, setCategories] = useState([]);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [categoryError, setCategoryError] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
 
+  // Google sign-up state.
+  const [googleUser, setGoogleUser] = useState(null); // { email, name }
+  const [googleError, setGoogleError] = useState('');
+  const googleBtnRef = useRef(null);
+
   const questions = [
-    {
-      id: 1,
-      title: '1-qadam. Muammoingizni qisqacha yozing',
-      placeholder: 'Muammoingizni bir-ikki gapda tushuntirib bering...',
-    },
-    {
-      id: 2,
-      title: '2-qadam. Kimlar bu muammoga duch kelmoqda?',
-      placeholder: "Ma'lum auditoriyani iloji boricha aniqroq tasvirlab bering...",
-    },
-    {
-      id: 3,
-      title: '3-qadam. Hozir odamlar bu muammoni qanday yechishmoqda?',
-      placeholder:
-        'Odamlar hozirda foydalanayotgan yechimlar, ularning kamchiliklari haqida yozing...',
-    },
-    {
-      id: 4,
-      title: "4-qadam. Bu muammo qanchalik og'riqli?",
-      placeholder:
-        'Nega bu muammo muhim? Odamlar bu muammo tufayli nimalarga duch kelishmoqda?',
-    },
-    {
-      id: 5,
-      title: '5-qadam. Ismingiz, kontakt va kategoriyani tanlang',
-      placeholder: '',
-    },
+    { id: 1, titleKey: 'add.step1Title', phKey: 'add.step1Ph' },
+    { id: 2, titleKey: 'add.step2Title', phKey: 'add.step2Ph' },
+    { id: 3, titleKey: 'add.step3Title', phKey: 'add.step3Ph' },
+    { id: 4, titleKey: 'add.step4Title', phKey: 'add.step4Ph' },
+    { id: 5, titleKey: 'add.step5Title', phKey: '' },
   ];
 
   const [currentStep, setCurrentStep] = useState(0);
@@ -52,12 +41,17 @@ const AddProblem = () => {
   const [submitError, setSubmitError] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  const isLastStep = currentStep === questions.length - 1;
+  const allFilled = Boolean(name.trim() && contact.trim() && selectedCategory);
+  // The bottom CTA becomes the Google button once every field is filled.
+  const showGoogleCta = isLastStep && REQUIRE_GOOGLE && !googleUser && allFilled;
+
   useEffect(() => {
     setCategoriesLoading(true);
     setCategoryError('');
-    fetch('http://localhost:8000/startuphunterapp/categories/')
+    fetch(apiUrl('/startuphunterapp/categories/'))
       .then((res) => {
-        if (!res.ok) throw new Error("Kategoriyalarni yuklab bo'lmadi");
+        if (!res.ok) throw new Error('load');
         return res.json();
       })
       .then((data) => {
@@ -66,34 +60,18 @@ const AddProblem = () => {
           setSelectedCategory(String(data[0].id));
         }
       })
-      .catch((err) => {
-        setCategoryError(err.message || 'Kategoriyalarni yuklashda xatolik');
+      .catch(() => {
+        setCategoryError(t('add.errLoad'));
       })
       .finally(() => setCategoriesLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleAnswerChange = (e) => {
-    const value = e.target.value;
-    const questionId = questions[currentStep].id;
-    setAnswers((prev) => ({
-      ...prev,
-      [questionId]: value,
-    }));
-  };
-
-  const handleNext = (e) => {
-    e.preventDefault();
-
-    if (currentStep < questions.length - 1) {
-      setCurrentStep((prev) => prev + 1);
-      return;
-    }
-
+  const submitProblem = () => {
     if (!name.trim() || !contact.trim() || !selectedCategory) {
-      setSubmitError("Iltimos ism, kontakt va kategoriyani to'ldiring");
+      setSubmitError(t('add.errFill'));
       return;
     }
-
     setSubmitting(true);
     setSubmitError('');
 
@@ -108,39 +86,98 @@ const AddProblem = () => {
       user_contact: contact,
     };
 
-    fetch('http://localhost:8000/startuphunterapp/problems/', {
+    fetch(apiUrl('/startuphunterapp/problems/'), {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     })
       .then((res) => {
-        if (!res.ok) throw new Error('Yuborishda xatolik');
+        if (!res.ok) throw new Error('submit');
         return res.json();
       })
-      .then(() => {
-        setIsSubmitted(true);
-      })
-      .catch((err) => {
-        setSubmitError(err.message || 'Yuborishda muammo yuz berdi');
-      })
+      .then(() => setIsSubmitted(true))
+      .catch(() => setSubmitError(t('add.errSubmit')))
       .finally(() => setSubmitting(false));
   };
 
+  // Verify the Google credential, capture the user, then submit the problem.
+  const handleGoogleCredential = (response) => {
+    setGoogleError('');
+    fetch(apiUrl('/startuphunterapp/auth/google/'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ credential: response.credential }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('google');
+        return res.json();
+      })
+      .then((data) => {
+        setGoogleUser({ email: data.email, name: data.name });
+        submitProblem();
+      })
+      .catch(() => setGoogleError(t('add.googleError')));
+  };
+
+  // Render the official "Sign up with Google" button in place of the submit
+  // button, once all fields are filled. Waits for the GIS script to load.
+  useEffect(() => {
+    if (!showGoogleCta) return;
+    let cancelled = false;
+    const render = () => {
+      if (cancelled) return;
+      if (window.google?.accounts?.id && googleBtnRef.current) {
+        window.google.accounts.id.initialize({
+          client_id: GOOGLE_CLIENT_ID,
+          callback: handleGoogleCredential,
+        });
+        googleBtnRef.current.innerHTML = '';
+        window.google.accounts.id.renderButton(googleBtnRef.current, {
+          theme: 'filled_black',
+          size: 'large',
+          text: 'signup_with',
+          shape: 'pill',
+        });
+      } else {
+        setTimeout(render, 300);
+      }
+    };
+    render();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showGoogleCta]);
+
+  const handleAnswerChange = (e) => {
+    const value = e.target.value;
+    const questionId = questions[currentStep].id;
+    setAnswers((prev) => ({ ...prev, [questionId]: value }));
+  };
+
+  const handleNext = (e) => {
+    e.preventDefault();
+    if (currentStep < questions.length - 1) {
+      setCurrentStep((prev) => prev + 1);
+      return;
+    }
+    // On the last step, require Google sign-up before sending (the actual
+    // submit happens inside handleGoogleCredential after auth). This guards the
+    // Enter-key path; the visible CTA is the Google button itself.
+    if (REQUIRE_GOOGLE && !googleUser) {
+      setSubmitError(t('add.googleRequired'));
+      return;
+    }
+    submitProblem();
+  };
+
   const currentQuestion = questions[currentStep];
-  const isLastStep = currentStep === questions.length - 1;
-  const navbarCategories = ['All', ...categories.map((cat) => cat.title)];
-  const isSubmitDisabled =
-    !name.trim() || !contact.trim() || !selectedCategory || submitting;
+  const categoryLabel = (cat) =>
+    lang === 'ru' ? cat.title_ru || cat.title : cat.title;
 
   return (
     <div className="add-problem-page">
-      <Navbar
-        language={language}
-        onLanguageChange={setLanguage}
-        categories={navbarCategories}
-      />
+      <Navbar />
 
       <div className="add-problem-container">
         {!isSubmitted ? (
@@ -149,7 +186,7 @@ const AddProblem = () => {
               <div className="step-indicator">
                 {currentStep + 1} / {questions.length}
               </div>
-              <h1 className="add-problem-title">{currentQuestion.title}</h1>
+              <h1 className="add-problem-title">{t(currentQuestion.titleKey)}</h1>
             </div>
 
             <div className="add-problem-right">
@@ -160,10 +197,10 @@ const AddProblem = () => {
               >
                 {!isLastStep && (
                   <label className="add-problem-label">
-                    Javobingiz
+                    {t('add.answerLabel')}
                     <textarea
                       className="add-problem-textarea"
-                      placeholder={currentQuestion.placeholder}
+                      placeholder={t(currentQuestion.phKey)}
                       value={answers[currentQuestion.id]}
                       onChange={handleAnswerChange}
                       required
@@ -174,29 +211,29 @@ const AddProblem = () => {
                 {isLastStep && (
                   <div className="add-problem-contact-fields">
                     <label className="add-problem-label">
-                      Ismingiz
+                      {t('add.nameLabel')}
                       <input
                         type="text"
                         className="add-problem-input"
-                        placeholder="Ismingizni kiriting"
+                        placeholder={t('add.namePh')}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         required
                       />
                     </label>
                     <label className="add-problem-label">
-                      Kontakt ma'lumotlari
+                      {t('add.contactLabel')}
                       <input
                         type="text"
                         className="add-problem-input"
-                        placeholder="Telefon yoki email"
+                        placeholder={t('add.contactPh')}
                         value={contact}
                         onChange={(e) => setContact(e.target.value)}
                         required
                       />
                     </label>
                     <label className="add-problem-label">
-                      Kategoriyani tanlang
+                      {t('add.categoryLabel')}
                       <select
                         className="add-problem-input"
                         value={selectedCategory}
@@ -206,12 +243,12 @@ const AddProblem = () => {
                       >
                         <option value="">
                           {categoriesLoading
-                            ? 'Kategoriyalar yuklanmoqda...'
-                            : 'Kategoriya tanlang'}
+                            ? t('add.categoryLoading')
+                            : t('add.categorySelect')}
                         </option>
                         {categories.map((category) => (
                           <option key={category.id} value={category.id}>
-                            {category.title}
+                            {categoryLabel(category)}
                           </option>
                         ))}
                       </select>
@@ -222,37 +259,42 @@ const AddProblem = () => {
                   </div>
                 )}
 
-                {currentStep < questions.length - 1 && (
+                {googleUser && (
+                  <p className="google-signed-in">
+                    ✓ {t('add.googleSignedIn')} <strong>{googleUser.name}</strong>
+                  </p>
+                )}
+
+                {/* --- bottom CTA --- */}
+                {!isLastStep && (
                   <button type="submit" className="add-problem-button">
-                    Keyingi savol
+                    {t('add.nextBtn')}
                   </button>
                 )}
 
-                {isLastStep && (
+                {isLastStep && showGoogleCta && (
+                  <div ref={googleBtnRef} className="google-cta" />
+                )}
+
+                {isLastStep && !showGoogleCta && (
                   <button
                     type="submit"
                     className="add-problem-button"
-                    disabled={isSubmitDisabled}
+                    disabled={!allFilled || submitting}
                   >
-                    {submitting ? 'Yuborilmoqda...' : 'Yuborish'}
+                    {submitting ? t('add.submitting') : t('add.submitBtn')}
                   </button>
                 )}
 
-                {submitError && (
-                  <p className="add-problem-error">{submitError}</p>
-                )}
+                {googleError && <p className="add-problem-error">{googleError}</p>}
+                {submitError && <p className="add-problem-error">{submitError}</p>}
               </form>
             </div>
           </div>
         ) : (
           <div className="add-problem-complete">
-            <h1 className="add-problem-complete-title">
-              Rahmat! Muammoingiz qo'shildi.
-            </h1>
-            <p className="add-problem-complete-text">
-              Tez orada biz ushbu muammo bo'yicha tahlil va potensial yechim
-              g'oyalarini tayyorlaymiz.
-            </p>
+            <h1 className="add-problem-complete-title">{t('add.doneTitle')}</h1>
+            <p className="add-problem-complete-text">{t('add.doneText')}</p>
           </div>
         )}
       </div>

@@ -9,6 +9,8 @@ RUN pip install --upgrade pip
 
 COPY requirements.txt .
 RUN pip install -r requirements.txt
+# Free Uzbek->Russian auto-translation for category names.
+RUN pip install --no-cache-dir deep-translator==1.11.4
 
 COPY . /app
 
