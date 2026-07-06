@@ -8,9 +8,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG = bool(os.environ.get("DEBUG", default=0))
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = os.environ.get(
+    "DJANGO_ALLOWED_HOSTS", "localhost 127.0.0.1 [::1]"
+).split()
 
-# ALLOWED_HOSTS = ['*']
+# Render injects the service's public hostname at runtime; trust it automatically
+# so ALLOWED_HOSTS / CSRF work without hardcoding the generated domain.
+_RENDER_HOST = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+if _RENDER_HOST:
+    ALLOWED_HOSTS.append(_RENDER_HOST)
 
 # Origins allowed to send unsafe (POST/PUT/DELETE) requests — required for the
 # admin login and any form POST when the app is reached through nginx (:1337)
@@ -21,6 +27,8 @@ CSRF_TRUSTED_ORIGINS = os.environ.get(
     "http://localhost:3000 http://127.0.0.1:3000 "
     "http://localhost:8000 http://127.0.0.1:8000",
 ).split()
+if _RENDER_HOST:
+    CSRF_TRUSTED_ORIGINS.append(f"https://{_RENDER_HOST}")
 
 # Trust the X-Forwarded-Proto header nginx sets, so CSRF/secure checks work
 # correctly when the app is served behind the proxy (and later over HTTPS).
@@ -66,8 +74,10 @@ STORAGES = {
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "http://localhost:1337"
+    "http://localhost:1337",
 ]
+# Allow the deployed frontend (e.g. the Vercel URL) via a space-separated env var.
+CORS_ALLOWED_ORIGINS += os.environ.get("DJANGO_CORS_ALLOWED_ORIGINS", "").split()
 
 ROOT_URLCONF = 'startuphunter.urls'
 
@@ -95,8 +105,8 @@ DATABASES = {
         'NAME': os.getenv('POSTGRES_DB'),
         'USER': os.getenv('POSTGRES_USER'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-        'HOST': 'db',
-        'PORT': 5432,
+        'HOST': os.getenv('POSTGRES_HOST', 'db'),
+        'PORT': os.getenv('POSTGRES_PORT', 5432),
     }
 }
 
