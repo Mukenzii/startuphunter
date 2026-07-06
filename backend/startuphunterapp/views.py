@@ -1,4 +1,6 @@
-from .models import Categories, UserProblems
+from datetime import timedelta
+
+from .models import Categories, UserProblems, ActiveVisitor, ONLINE_WINDOW_SECONDS
 from .serializers import CategorySerializer, UserProblemSerializer
 from rest_framework import generics
 from rest_framework.decorators import api_view
@@ -8,6 +10,41 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.utils import timezone
+
+
+def _online_count():
+    """Number of visitors whose last heartbeat is within the online window."""
+    cutoff = timezone.now() - timedelta(seconds=ONLINE_WINDOW_SECONDS)
+    return ActiveVisitor.objects.filter(last_seen__gte=cutoff).count()
+
+
+@api_view(["POST"])
+def presence_heartbeat(request):
+    """Record/refresh a visitor's presence and return the live online count.
+
+    The frontend posts {client_id} on load and every ~30s. client_id is an
+    anonymous random id kept in the browser's localStorage.
+    """
+    client_id = str(request.data.get("client_id") or "").strip()[:64]
+    if not client_id:
+        return Response({"detail": "Missing client_id."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # auto_now on last_seen bumps the timestamp on every save (create or update).
+    ActiveVisitor.objects.update_or_create(client_id=client_id)
+
+    # Opportunistic cleanup so the table doesn't grow without bound.
+    ActiveVisitor.objects.filter(
+        last_seen__lt=timezone.now() - timedelta(hours=1)
+    ).delete()
+
+    return Response({"online": _online_count()})
+
+
+@api_view(["GET"])
+def presence_online(request):
+    """Return just the current online count (no heartbeat recorded)."""
+    return Response({"online": _online_count()})
 
 
 @api_view(["POST"])

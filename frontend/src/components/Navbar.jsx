@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import logo from './logo.svg';
 import { LANGUAGES, useLang } from '../i18n.jsx';
+import { usePresence } from '../usePresence';
 
 const Chevron = () => (
   <svg className="nav-chevron" viewBox="0 0 12 8" fill="none" aria-hidden="true">
@@ -18,6 +19,19 @@ const Globe = () => (
       stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
   </svg>
 );
+
+const OnlineBadge = () => {
+  const { t } = useLang();
+  const online = usePresence();
+  if (online == null) return null;
+  return (
+    <span className="online-badge" title={t('nav.onlineTitle')}>
+      <span className="online-dot" aria-hidden="true" />
+      <strong>{online}</strong>
+      <span className="online-label">{t('nav.online')}</span>
+    </span>
+  );
+};
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -47,6 +61,7 @@ const Navbar = () => {
           <button className="nav-link" type="button" onClick={() => navigate('/about')}>
             {t('nav.about')}
           </button>
+          <OnlineBadge />
         </div>
 
         {/* Right section */}

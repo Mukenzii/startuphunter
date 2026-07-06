@@ -1,6 +1,10 @@
 from django.db import models
 
 
+# A visitor counts as "online" if their last heartbeat is within this window.
+ONLINE_WINDOW_SECONDS = 60
+
+
 def translate_uz_to_ru(text):
     """Best-effort Uzbek -> Russian translation (free Google Translate).
 
@@ -69,3 +73,22 @@ class UserProblems(models.Model):
         if not self.title:
             self.title = self.q1[:30]
         super().save(*args, **kwargs)
+
+
+class ActiveVisitor(models.Model):
+    """One row per browser client, refreshed by the frontend heartbeat.
+
+    Rows are anonymous (a random client id generated in the browser), so this
+    measures live traffic rather than authenticated accounts. A visitor is
+    "online" when last_seen is within ONLINE_WINDOW_SECONDS.
+    """
+    client_id = models.CharField(max_length=64, unique=True)
+    last_seen = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Active visitor'
+        verbose_name_plural = 'Active visitors'
+        ordering = ['-last_seen']
+
+    def __str__(self):
+        return self.client_id

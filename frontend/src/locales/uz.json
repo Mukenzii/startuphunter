@@ -1,6 +1,8 @@
 {
   "nav.about": "Biz haqimizda",
   "nav.add": "Muammo qo'shish",
+  "nav.online": "onlayn",
+  "nav.onlineTitle": "Hozir saytda faol foydalanuvchilar",
   "lang.placeholder": "Tilni tanlang",
 
   "hero.title": "Odamlarga chindan ham kerak bo'lgan startap g'oyalari",
