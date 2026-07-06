@@ -34,6 +34,13 @@ services:
       # Google OAuth web client ID (for "Sign up with Google"). Optional.
       - key: GOOGLE_CLIENT_ID
         sync: false
+      # Admin superuser, auto-created on first deploy by entrypoint.prod.sh.
+      - key: DJANGO_SUPERUSER_USERNAME
+        sync: false
+      - key: DJANGO_SUPERUSER_EMAIL
+        sync: false
+      - key: DJANGO_SUPERUSER_PASSWORD
+        sync: false
       # Database connection, pulled from the managed Postgres above.
       - key: POSTGRES_DB
         fromDatabase:
